@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../../db/datasource";
+import { AppDataSource } from "../../config/db/datasource";
 import { Request, Response } from "express";
 import Order from "../../entity/order.entity";
 

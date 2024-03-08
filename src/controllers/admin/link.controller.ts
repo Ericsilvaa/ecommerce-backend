@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 import Link from "../../entity/link.entity";
-import { AppDataSource } from "../../db/datasource";
+import { AppDataSource } from "../../config/db/datasource";
 import { Request, Response } from "express";
 
 export default class LinkController {

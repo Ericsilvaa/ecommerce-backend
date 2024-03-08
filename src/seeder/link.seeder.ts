@@ -1,4 +1,4 @@
-import { AppDataSource } from "../db/datasource";
+import { AppDataSource } from "../config/db/datasource";
 
 import { faker } from '@faker-js/faker';
 import Product from "../entity/product.entity";

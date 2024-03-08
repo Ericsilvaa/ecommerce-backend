@@ -1,4 +1,4 @@
-import { AppDataSource } from "../db/datasource";
+import { AppDataSource } from "../config/db/datasource";
 import User from "../entity/user.entity";
 import bcryptjs from "bcryptjs";
 import { faker } from '@faker-js/faker';
