@@ -1,6 +1,6 @@
 import { Router } from "express";
-import ProductController from "../controllers/product.controller";
-import ProductRepository from "../repositories/product.repository";
+import ProductController from "../../controllers/admin/product.controller";
+import ProductRepository from "../../repositories/product.repository";
 
 export const router = Router()
 const productRepository = new ProductRepository()

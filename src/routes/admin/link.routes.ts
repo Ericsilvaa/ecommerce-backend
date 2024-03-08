@@ -1,5 +1,5 @@
 import { Router } from "express";
-import LinkController from "../controllers/link.controller";
+import LinkController from "../../controllers/admin/link.controller";
 
 const linkController = new LinkController()
 

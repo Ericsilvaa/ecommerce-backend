@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import bcryptjs from "bcryptjs";
 import { sign } from "jsonwebtoken";
 
-import User from "../entity/user.entity";
-import UserRepository from "../repositories/user.repository";
-import Product from "../entity/product.entity";
+import User from "../../entity/user.entity";
+import UserRepository from "../../repositories/user.repository";
+import Product from "../../entity/product.entity";
 
 
 export default class AuthController {

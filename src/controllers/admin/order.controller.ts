@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../db/datasource";
+import { AppDataSource } from "../../db/datasource";
 import { Request, Response } from "express";
-import Order from "../entity/order.entity";
+import Order from "../../entity/order.entity";
 
 export default class OrderController {
   private repository: Repository<Order> = AppDataSource.getRepository(Order);

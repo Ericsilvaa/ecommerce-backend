@@ -1,7 +1,7 @@
 import { Router } from "express";
-import AuthController from "../controllers/auth.controller";
-import { AuthMiddleware } from "../middleware/auth.middleware";
-import AuthRepository from "../repositories/auth.repository";
+import AuthController from "../../controllers/admin/auth.controller";
+import { AuthMiddleware } from "../../middleware/auth.middleware";
+import AuthRepository from "../../repositories/auth.repository";
 
 const authRepository = new AuthRepository()
 const authController = new AuthController(authRepository)
