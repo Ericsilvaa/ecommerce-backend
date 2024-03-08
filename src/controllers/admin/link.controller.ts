@@ -1,7 +1,7 @@
-import { Repository } from "typeorm";
-import Link from "../../entity/link.entity";
-import { AppDataSource } from "../../config/db/datasource";
 import { Request, Response } from "express";
+import { Repository } from "typeorm";
+import { AppDataSource } from "../../config/db/datasource";
+import Link from "../../entity/link.entity";
 
 export default class LinkController {
   private repository: Repository<Link> = AppDataSource.getRepository(Link);
@@ -15,7 +15,6 @@ export default class LinkController {
     res.send(links);
   }
 
-
   async link_embassador(req: Request, res: Response) {
     const links = await this.repository.save({
       user: { id: +req.user.id },
@@ -25,7 +24,6 @@ export default class LinkController {
 
     res.send(links)
   }
-
 
   async Stats(req: Request, res: Response) {
     const links = await this.repository.find({
@@ -47,8 +45,12 @@ export default class LinkController {
         revenue
       }
     }))
+  }
 
+  async getLink(req: Request, res: Response) {
+    const link = await this.repository.findOne({ where: { code: req.params.code }, relations: ['user', 'products'] })
 
+    res.send(link)
   }
 
 }

@@ -9,6 +9,7 @@ import LinkRoute from './admin/link.routes'
 import AmbassadorAuthRoute from './ambassador/ambassador.routes'
 import AmbassadorProductsRoute from './ambassador/products.routes'
 import AmbassadorLinkRoute from './ambassador/ambassador_link.routes'
+import CheckoutLinkRoute from './checkout.routes'
 
 
 const router = (app: Router) => {
@@ -19,6 +20,7 @@ const router = (app: Router) => {
   app.use(`${process.env.BASE_URL_AMBASSADOR}`, AmbassadorAuthRoute)
   app.use(`${process.env.BASE_URL_AMBASSADOR}`, AmbassadorProductsRoute)
   app.use(`${process.env.BASE_URL_AMBASSADOR}`, AmbassadorLinkRoute)
+  app.use(`/api/v1/checkout`, CheckoutLinkRoute)
 }
 
 export default router;
