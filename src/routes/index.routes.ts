@@ -8,6 +8,7 @@ import LinkRoute from './admin/link.routes'
 // ambassador routes
 import AmbassadorAuthRoute from './ambassador/ambassador.routes'
 import AmbassadorProductsRoute from './ambassador/products.routes'
+import AmbassadorLinkRoute from './ambassador/ambassador_link.routes'
 
 
 const router = (app: Router) => {
@@ -17,6 +18,7 @@ const router = (app: Router) => {
   app.use(`${process.env.BASE_URL_ADMIN}`, LinkRoute)
   app.use(`${process.env.BASE_URL_AMBASSADOR}`, AmbassadorAuthRoute)
   app.use(`${process.env.BASE_URL_AMBASSADOR}`, AmbassadorProductsRoute)
+  app.use(`${process.env.BASE_URL_AMBASSADOR}`, AmbassadorLinkRoute)
 }
 
 export default router;
