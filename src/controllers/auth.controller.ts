@@ -95,4 +95,12 @@ export default class AuthController {
     res.send(dataUpdated)
 
   }
+
+  async Ambassadors(req: Request, res: Response) {
+
+    // const ambassadors = await this.repository.getAllRegister({ where: { is_ambassador: true } })
+
+    res.send([])
+
+  }
 }

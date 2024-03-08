@@ -1,8 +1,6 @@
 import { Repository } from "typeorm";
-import Link from "../entity/link.entity";
 import { AppDataSource } from "../db/datasource";
 import { Request, Response } from "express";
-import User from "../entity/user.entity";
 import Order from "../entity/order.entity";
 
 export default class OrderController {
