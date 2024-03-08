@@ -114,6 +114,18 @@ export default class ProductController {
       });
     }
 
-    return res.send(products);
+    const page: number = parseInt(req.query.page as any) || 1
+    const perPage = 9;
+    const total = products.length
+
+    // parameters slice: start/end/ 
+    const data = products.slice((page - 1) * perPage, page * perPage)
+
+    return res.send({
+      data,
+      total,
+      page,
+      last_page: Math.ceil(total / perPage)
+    });
   }
 }
