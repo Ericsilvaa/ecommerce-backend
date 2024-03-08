@@ -3,12 +3,15 @@ import bcryptjs from "bcryptjs";
 import { sign } from "jsonwebtoken";
 
 import User from "../../entity/user.entity";
-import UserRepository from "../../repositories/user.repository";
 import Product from "../../entity/product.entity";
+import AuthRepository from "../../repositories/auth.repository";
+
+type user_revenue = User & { revenue: number };
 
 export default class AuthController {
-  private repository: UserRepository;
-  constructor(repository: UserRepository) {
+  private repository: AuthRepository;
+
+  constructor(repository: AuthRepository) {
     this.repository = repository;
   }
 
@@ -16,10 +19,6 @@ export default class AuthController {
     const { password, password_confirm, ...body } = req.body;
     const is_ambassador = req.baseUrl === `${process.env.BASE_URL_AMBASSADOR}`;
 
-    console.log(
-      "🚀 ~ AuthController ~ registerUser ~ is_ambassador:",
-      is_ambassador
-    );
     if (password !== password_confirm) {
       return res.status(400).send({ message: `Password's do not match` });
     }
@@ -82,12 +81,38 @@ export default class AuthController {
   }
 
   async AuthenticatedUser(req: Request, res: Response) {
+    const pathname = req.baseUrl + req.path;
+
+    const adminRouteUser = pathname === `${process.env.BASE_URL_ADMIN}/user`;
     try {
       const user = (await this.repository.getOneRegister({
         id: Number(req.user),
       })) as User;
 
-      res.send(user);
+      if (adminRouteUser) {
+        return res.send(user);
+      }
+
+      // if ambassador site
+      const orders = await this.repository.getUserwithRevenue(
+        {
+          user_id: user.id,
+          complete: true,
+        },
+        { relations: ["order_items"] }
+      );
+
+      const revenue = orders.reduce(
+        (s, o) => s + o.ambassador_revenue,
+        0
+      );
+
+      const userRevenue: user_revenue = {
+        ...user,
+        revenue,
+      };
+
+      res.send(userRevenue)
     } catch (error) {
       return res.status(401).send({
         message: "Unauthenticated",
