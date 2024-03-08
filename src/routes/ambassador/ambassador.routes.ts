@@ -10,7 +10,7 @@ const authController = new AuthController(authRepository)
 export const router = Router()
 
 router.get('/user', AuthMiddleware, authController.AuthenticatedUser.bind(authController))
-router.get('/ambassadors', AuthMiddleware, authController.Ambassadors.bind(authController))
+router.get('/rankings', AuthMiddleware, authController.rankings.bind(authController))
 router.post('/register', authController.registerUser.bind(authController))
 router.post('/login', authController.loginUser.bind(authController))
 router.post('/logout', AuthMiddleware, authController.logout.bind(authController))

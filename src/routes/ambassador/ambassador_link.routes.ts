@@ -7,5 +7,6 @@ const linkController = new LinkController()
 export const router = Router()
 
 router.get('/users/:user_id/links', AuthMiddleware, linkController.link_embassador.bind(linkController))
+router.get('/stats', AuthMiddleware, linkController.Stats.bind(linkController))
 
 export default router

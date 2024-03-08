@@ -27,4 +27,28 @@ export default class LinkController {
   }
 
 
+  async Stats(req: Request, res: Response) {
+    const links = await this.repository.find({
+      where: { user: { id: +req.user.id } },
+      relations: ['orders', 'orders.order_item']
+    });
+
+    res.send(links.map(link => {
+      const orders = link.orders.filter(o => o.complete)
+
+      const revenue = orders.reduce(
+        (s, o) => s + o.ambassador_revenue,
+        0
+      );
+
+      return {
+        code: link.code,
+        count: orders.length,
+        revenue
+      }
+    }))
+
+
+  }
+
 }

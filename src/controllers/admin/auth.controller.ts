@@ -5,6 +5,7 @@ import { sign } from "jsonwebtoken";
 import User from "../../entity/user.entity";
 import Product from "../../entity/product.entity";
 import AuthRepository from "../../repositories/auth.repository";
+import Order from "../../entity/order.entity";
 
 type user_revenue = User & { revenue: number };
 
@@ -94,25 +95,14 @@ export default class AuthController {
       }
 
       // if ambassador site
-      const orders = await this.repository.getUserwithRevenue(
-        {
-          user_id: user.id,
-          complete: true,
-        },
-        { relations: ["order_items"] }
-      );
+      const { revenue } = await this.getUserOrders(user.id, true)
 
-      const revenue = orders.reduce(
-        (s, o) => s + o.ambassador_revenue,
-        0
-      );
-
-      const userRevenue: user_revenue = {
+      const user_revenue = {
         ...user,
-        revenue,
-      };
+        revenue
+      }
 
-      res.send(userRevenue)
+      res.send(user_revenue)
     } catch (error) {
       return res.status(401).send({
         message: "Unauthenticated",
@@ -148,8 +138,43 @@ export default class AuthController {
   }
 
   async Ambassadors(req: Request, res: Response) {
-    // const ambassadors = await this.repository.getAllRegister({ where: { is_ambassador: true } })
+    const ambassadors = await this.repository.getAllRegister({ is_ambassador: true })
 
-    res.send([]);
+    res.send(ambassadors);
   }
+
+  async rankings(req: Request, res: Response) {
+    const ambassadors = await this.repository.getAllRegister({ is_ambassador: true })
+
+    const ranking = ambassadors.map(async ambassador => {
+      const { revenue } = await this.getUserOrders(ambassador.id, true)
+
+      return {
+        name: ambassador.name,
+        revenue
+      }
+    })
+
+    res.send(ranking);
+  }
+
+
+  private async getUserOrders(userId: any, complete: boolean) {
+    const orders = await this.repository.getUserwithRevenue(
+      {
+        user_id: userId,
+        complete
+      },
+      { relations: ["order_items"] }
+    );
+
+
+    const revenue = orders.reduce(
+      (s, o) => s + o.ambassador_revenue,
+      0
+    );
+
+    return { orders, revenue }
+  }
+
 }
