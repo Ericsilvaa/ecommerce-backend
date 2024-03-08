@@ -6,8 +6,6 @@ import Product from "../entity/product.entity";
 AppDataSource.initialize().then(async () => {
   const repository = AppDataSource.getRepository(Product)
 
-
-
   for (let i = 0; i < 10; i++) {
     const price = faker.commerce.price({ min: 50, max: 350, dec: 2, symbol: 'R$' })
 

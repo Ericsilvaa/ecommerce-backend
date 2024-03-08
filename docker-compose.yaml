@@ -26,3 +26,5 @@ services:
     #   image: redis
     #   ports:
     #     - 6379:6379
+#docker-compose exec backend sh
+# run command: npm run update:rankigs

@@ -6,6 +6,7 @@ import User from "../../entity/user.entity";
 import Product from "../../entity/product.entity";
 import AuthRepository from "../../repositories/auth.repository";
 import Order from "../../entity/order.entity";
+import { client } from "../..";
 
 type user_revenue = User & { revenue: number };
 
@@ -144,19 +145,40 @@ export default class AuthController {
   }
 
   async rankings(req: Request, res: Response) {
-    const ambassadors = await this.repository.getAllRegister({ is_ambassador: true })
+    // don't exist property: only way is send the command natively to read
+    const result: string[] = await client.sendCommand(['ZREVRANGEBYSCORE', 'rankings', '+inf', '-inf', 'WITHSCORES'])
+    let name: any;
 
-    const ranking = ambassadors.map(async ambassador => {
-      const { revenue } = await this.getUserOrders(ambassador.id, true)
-
-      return {
-        name: ambassador.name,
-        revenue
+    const rankings = result.reduce((o, r) => {
+      if (isNaN(parseInt(r))) {
+        name = r
+        return o
+      } else {
+        return {
+          ...o,
+          [name]: parseInt(r)
+        }
       }
-    })
 
-    res.send(ranking);
+    }, {})
+
+    return res.send(rankings)
   }
+
+  // async rankings(req: Request, res: Response) {
+  //   const ambassadors = await this.repository.getAllRegister({ is_ambassador: true })
+
+  //   const ranking = ambassadors.map(async ambassador => {
+  //     const { revenue } = await this.getUserOrders(ambassador.id, true)
+
+  //     return {
+  //       name: ambassador.name,
+  //       revenue
+  //     }
+  //   })
+
+  //   res.send(ranking);
+  // }
 
 
   private async getUserOrders(userId: any, complete: boolean) {
