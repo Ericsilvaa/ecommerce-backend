@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../db/datasource";
+import { AppDataSource } from "../../config/db/datasource";
 import { Request, Response } from "express";
-import Product from "../entity/product.entity";
-import ProductRepository from "../repositories/product.repository";
+import Product from "../../entity/product.entity";
+import ProductRepository from "../../repositories/product.repository";
 
 
 export default class ProductController {

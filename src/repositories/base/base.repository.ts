@@ -1,5 +1,5 @@
 import { DataSource, DeepPartial, ObjectType, Repository, FindOptionsWhere, ObjectLiteral } from "typeorm"
-import { AppDataSource } from "../../db/datasource"
+import { AppDataSource } from "../../config/db/datasource"
 import { IBaseRepository } from "./IBaseRepository"
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity"
 

@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import express from "express";
 import cors from "cors";
 import routes from "./routes/index.routes";
-import { AppDataSource } from "./db/datasource";
+import { AppDataSource } from "./config/db/datasource";
 
 
 AppDataSource.initialize().then(() => {

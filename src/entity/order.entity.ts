@@ -80,4 +80,8 @@ export default class Order {
   get total(): number {
     return this.order_items.reduce((s, item) => s + item.admin_revenue, 0)
   }
+
+  get ambassador_revenue(): number {
+    return this.order_items.reduce((s, item) => s + item.ambassador_revenue, 0)
+  }
 }
