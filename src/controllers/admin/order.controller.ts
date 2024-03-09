@@ -58,44 +58,47 @@ export default class OrderController {
       await this.queryRunner.connect()
       await this.queryRunner.startTransaction()
 
-      const order = this.repository.create({
+      let order = this.repository.create({
         user_id: link.user.id,
         ambassador_email: link.user.email,
         code: body.code,
         first_name: body.first_name,
         last_name: body.last_name,
+        email: body.email,
         address: body.address,
         country: body.country,
         city: body.city,
         zipcode: body.zipcode,
       });
 
-      const newOrder = await this.queryRunner.manager.save(order)
+      order = await this.queryRunner.manager.save(order)
 
       const line_items: any[] = []
 
       for (let p of body.products) {
-        const product = (await this.repositoryProducts.findOne(
-          p.product_id
-        )) as Product & { quantity: number };
+        const product = (await this.repositoryProducts.findOne({ where: { id: p.product_id } })) as Product & { quantity: number };
 
         const orderItem = this.repositoryOrderItem.create({
-          order: newOrder,
-          product_title: product?.title,
-          price: product?.price,
-          quantity: product?.quantity,
-          ambassador_revenue: 0.1 * parseInt(product.price) * product.quantity,
-          admin_revenue: 0.9 * parseInt(product.price) * product.quantity
+          product_title: product.title,
+          price: product.price,
+          quantity: p.quantity,
+          ambassador_revenue: 0.1 * parseInt(product.price) * p.quantity,
+          admin_revenue: 0.9 * parseInt(product.price) * p.quantity,
+          order,
         });
 
         await this.queryRunner.manager.save(orderItem)
 
         line_items.push({
-          name: product.title,
-          description: product.description,
-          images: [product.image],
-          amount: 100 * parseInt(product.price),
-          currency: 'usd',
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: product.title,
+              description: product.description,
+              images: [product.image],
+            },
+            unit_amount: parseInt(product.price),
+          },
           quantity: p.quantity
         })
       }
@@ -104,14 +107,15 @@ export default class OrderController {
       const stripe = new Stripe(key)
 
       const source = await stripe.checkout.sessions.create({
+        mode: 'payment',
         payment_method_types: ['card'],
         line_items,
         success_url: `${process.env.CHECKOUT_URL}/sucess?source={CHECKOUT_SESSION_ID}`,
         cancel_url: `${process.env.CHECKOUT_URL}/error`
       })
 
-      newOrder.transaction_id = source['id']
-      await this.queryRunner.manager.save(newOrder)
+      order.transaction_id = source['id']
+      await this.queryRunner.manager.save(order)
 
       await this.queryRunner.commitTransaction()
 
@@ -119,7 +123,7 @@ export default class OrderController {
     } catch (error) {
       await this.queryRunner.rollbackTransaction()
 
-      return res.status(400).send({ message: "Error occurred!" });
+      return res.status(400).send({ message: error });
 
     }
 
@@ -139,7 +143,10 @@ export default class OrderController {
     // increse the rankings manager by redis
     await client.zIncrBy('rankings', order.ambassador_revenue, user.name)
 
-    const transporter = createTransport(`${process.env.SMTP_MAIL_URL}`)
+    const transporter = createTransport({
+      host: '127.0.0.1',
+      port: 1025
+    });
 
     // when we confirmed an order, we'll send two emails
     await transporter.sendMail({

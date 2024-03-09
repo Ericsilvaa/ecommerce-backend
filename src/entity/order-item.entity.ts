@@ -3,9 +3,8 @@ import Order from "./order.entity";
 
 @Entity()
 export default class OrderItem {
-
   @PrimaryGeneratedColumn()
-  id!: number
+  id!: number;
 
   @Column()
   product_title!: string

@@ -15,11 +15,14 @@ export default class LinkController {
     res.send(links);
   }
 
-  async link_embassador(req: Request, res: Response) {
+  async CreateLink(req: Request, res: Response) {
+    const products = req.body.products.map((id: any) => ({ id }))
+
+
     const links = await this.repository.save({
-      user: { id: +req.user.id },
+      user: req.user,
       code: Math.random().toString(36).substring(6),
-      products: req.body.products.map((id: any) => ({ id })),
+      products
     });
 
     res.send(links)
