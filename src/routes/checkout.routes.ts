@@ -10,7 +10,7 @@ const orderController = new OrderController()
 export const router = Router()
 
 router.get('/links/:code', linkController.getLink.bind(linkController))
-router.post('/order', orderController.CreateOrder.bind(orderController))
-router.post('/order/confirm', orderController.ConfirmOrder.bind(orderController))
+router.post('/orders', orderController.CreateOrder.bind(orderController))
+router.post('/orders/confirm', orderController.ConfirmOrder.bind(orderController))
 
 export default router

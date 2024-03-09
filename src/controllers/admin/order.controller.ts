@@ -9,6 +9,7 @@ import Product from "../../entity/product.entity";
 import OrderItem from "../../entity/order-item.entity";
 import { client } from "../..";
 import User from "../../entity/user.entity";
+import { createTransport } from 'nodemailer'
 
 export default class OrderController {
   private repository: Repository<Order> = AppDataSource.getRepository(Order);
@@ -135,7 +136,27 @@ export default class OrderController {
 
     const user = await this.repositoryUser.findOne({ where: { id: order.user_id } }) as User
 
+    // increse the rankings manager by redis
     await client.zIncrBy('rankings', order.ambassador_revenue, user.name)
+
+    const transporter = createTransport(`${process.env.SMTP_MAIL_URL}`)
+
+    // when we confirmed an order, we'll send two emails
+    await transporter.sendMail({
+      from: 'from@example.com',
+      to: 'admin@admin.com',
+      subject: 'An order has been completed',
+      html: `Order #${order.id} with a total of $${order.total} has been completed`
+    })
+
+    await transporter.sendMail({
+      from: 'from@example.com',
+      to: order.ambassador_email,
+      subject: 'An order has been completed',
+      html: `You earned $${order.ambassador_revenue} from the link #${order.code}`
+    })
+
+    transporter.close()
 
     return res.status(404).send({ message: 'Success' })
   }

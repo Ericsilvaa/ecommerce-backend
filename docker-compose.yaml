@@ -26,5 +26,12 @@ services:
     #   image: redis
     #   ports:
     #     - 6379:6379
+# mailhog:
+#     image: mailhog/mailhog:latest
+#     restart: always
+#     ports:
+#       - 1025:1025
+#       - 8025:8025
+
 #docker-compose exec backend sh
 # run command: npm run update:rankigs
