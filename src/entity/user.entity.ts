@@ -33,4 +33,12 @@ export default class User {
     this.password = password;
     this.is_ambassador = is_ambassador;
   }
+
+
+  get name() {
+    return `${this.first_name} ${this.last_name}`
+  }
+
+
+
 }

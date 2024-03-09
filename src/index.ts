@@ -4,9 +4,17 @@ import express from "express";
 import cors from "cors";
 import routes from "./routes/index.routes";
 import { AppDataSource } from "./config/db/datasource";
+import { createClient } from 'redis';
 
 
-AppDataSource.initialize().then(() => {
+export const client = createClient({
+  url: 'redis://127.0.0.1:6379'
+})
+
+
+AppDataSource.initialize().then(async () => {
+  await client.connect()
+
   const app = express();
 
   app.use(cookieParser())

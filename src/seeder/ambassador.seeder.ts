@@ -20,8 +20,6 @@ AppDataSource.initialize().then(async () => {
     await repository.save(user)
   }
 
-
-
   process.exit()
 })
 
