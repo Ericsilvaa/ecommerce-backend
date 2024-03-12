@@ -163,6 +163,7 @@ export default class OrderController {
       html: `You earned $${order.ambassador_revenue} from the link #${order.code}`
     })
 
+
     transporter.close()
 
     return res.status(404).send({ message: 'Success' })

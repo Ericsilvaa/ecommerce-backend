@@ -9,7 +9,9 @@
     "seed:products": "ts-node src/seeder/products.seeder.ts",
     "seed:link": "ts-node src/seeder/link.seeder.ts",
     "seed:orders": "ts-node src/seeder/order.seeder.ts",
-    "update:rankings": "ts-node src/seeder/rankings.seeder.ts"
+    "update:rankings": "ts-node src/seeder/rankings.seeder.ts",
+    "test": "npx jest --watchAll __tests__/api",
+    "test:cov": "npx jest --config ./jest.config.js __tests__/service"
   },
   "keywords": [],
   "author": "",
@@ -38,11 +40,16 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
     "@types/faker": "^6.6.9",
+    "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.25",
     "@types/nodemailer": "^6.4.14",
     "@types/stripe": "^8.0.417",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.0",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2"
   }
